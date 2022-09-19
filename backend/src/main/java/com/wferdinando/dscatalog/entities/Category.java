@@ -3,6 +3,7 @@ package com.wferdinando.dscatalog.entities;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -17,9 +18,14 @@ public class Category implements Serializable {
     private Long id;
     private String name;
 
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant created_at;
 
-    public Category(){}
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant updated_at;
 
+    public Category() {
+    }
 
     public Category(Long id, String name) {
         this.id = id;
@@ -42,6 +48,25 @@ public class Category implements Serializable {
         this.name = name;
     }
 
+    public Instant getCreated_at() {
+        return created_at;
+    }
+
+    public Instant getUpdated_at() {
+        return updated_at;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        created_at = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updated_at = Instant.now();
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,9 +82,6 @@ public class Category implements Serializable {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "Category{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 }
